@@ -15,6 +15,12 @@ Button/fonts/font = SubResource( 2 )
 [sub_resource type="GDScript" id=4]
 script/source = "extends Control
 
+### Automatic References Start ###
+onready var _current_card: PanelContainer = $Current_Card
+### Automatic References Stop ###
+
+export(PackedScene) var card_scn = preload(\"res://Card.tscn\")
+
 var deck := []
 
 func _ready() -> void:
@@ -23,10 +29,20 @@ func _ready() -> void:
 
 	randomize()
 	deck.shuffle()
+
+
+func _on_DrawBtn_pressed() -> void:
+	if len(deck) > 0:
+		var card = card_scn.instance()
+		
+		card.value = deck.pop_front()
+		card.mode = Card.MODE.SHOWN
+		
+		_current_card.add_child(card)
 "
 
 [sub_resource type="DynamicFont" id=1]
-size = 150
+size = 311
 use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 2 )
@@ -42,14 +58,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="Label" type="Label" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -243.5
-margin_top = -72.5
-margin_right = 243.5
-margin_bottom = 72.5
+anchor_right = 1.0
+anchor_bottom = 1.0
 custom_colors/font_color = Color( 0, 0, 0, 0.145098 )
 custom_fonts/font = SubResource( 1 )
 text = "Cactus!"
@@ -152,3 +162,47 @@ rect_min_size = Vector2( 120, 50 )
 size_flags_horizontal = 6
 size_flags_vertical = 4
 text = "Usa"
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -251.0
+margin_top = -78.0
+margin_right = -107.0
+margin_bottom = 78.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Draw_pile" parent="PanelContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 32.0
+margin_top = 22.0
+margin_right = 112.0
+margin_bottom = 134.0
+mode = 0
+
+[node name="DrawBtn" type="Button" parent="PanelContainer/Draw_pile"]
+margin_left = 6.0
+margin_top = 6.0
+margin_right = 74.0
+margin_bottom = 106.0
+flat = true
+
+[node name="Current_Card" type="PanelContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -72.0
+margin_top = -78.0
+margin_right = 72.0
+margin_bottom = 78.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[connection signal="pressed" from="PanelContainer/Draw_pile/DrawBtn" to="." method="_on_DrawBtn_pressed"]
