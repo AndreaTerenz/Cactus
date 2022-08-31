@@ -1,3 +1,154 @@
-[gd_scene format=2]
+[gd_scene load_steps=7 format=2]
 
-[node name="Node2D" type="Node2D"]
+[ext_resource path="res://Card.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Fonts/OMEGLE.otf" type="DynamicFontData" id=2]
+
+[sub_resource type="DynamicFont" id=2]
+size = 30
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 2 )
+
+[sub_resource type="Theme" id=3]
+Button/fonts/font = SubResource( 2 )
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends Control
+
+var deck := []
+
+func _ready() -> void:
+	for i in range(1, 41):
+		deck.append(i % 10)
+
+	randomize()
+	deck.shuffle()
+"
+
+[sub_resource type="DynamicFont" id=1]
+size = 150
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 2 )
+
+[node name="Node2D" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = SubResource( 3 )
+script = SubResource( 4 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -243.5
+margin_top = -72.5
+margin_right = 243.5
+margin_bottom = 72.5
+custom_colors/font_color = Color( 0, 0, 0, 0.145098 )
+custom_fonts/font = SubResource( 1 )
+text = "Cactus!"
+align = 1
+valign = 1
+
+[node name="Deck" type="PanelContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -202.0
+margin_top = -152.0
+margin_right = 202.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Deck"]
+margin_left = 36.0
+margin_top = 20.0
+margin_right = 368.0
+margin_bottom = 132.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+
+[node name="Card" parent="Deck/HBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 80.0
+margin_bottom = 112.0
+
+[node name="Card2" parent="Deck/HBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 84.0
+margin_right = 164.0
+margin_bottom = 112.0
+
+[node name="Card3" parent="Deck/HBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 168.0
+margin_right = 248.0
+margin_bottom = 112.0
+
+[node name="Card4" parent="Deck/HBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 252.0
+margin_right = 332.0
+margin_bottom = 112.0
+
+[node name="Buttons" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -333.0
+margin_top = -132.0
+margin_right = 333.0
+margin_bottom = -17.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="StopBtn" type="Button" parent="Buttons"]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -120.0
+margin_top = -25.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 120, 50 )
+size_flags_horizontal = 10
+size_flags_vertical = 4
+text = "STOP!"
+
+[node name="HBoxContainer" type="VBoxContainer" parent="Buttons"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -57.5
+margin_right = 120.0
+margin_bottom = 57.5
+alignment = 1
+
+[node name="DiscardBtn" type="Button" parent="Buttons/HBoxContainer"]
+margin_top = 5.0
+margin_right = 120.0
+margin_bottom = 55.0
+rect_min_size = Vector2( 120, 50 )
+size_flags_horizontal = 6
+size_flags_vertical = 4
+text = "Scarta"
+
+[node name="UseBtn" type="Button" parent="Buttons/HBoxContainer"]
+margin_top = 59.0
+margin_right = 120.0
+margin_bottom = 109.0
+rect_min_size = Vector2( 120, 50 )
+size_flags_horizontal = 6
+size_flags_vertical = 4
+text = "Usa"
