@@ -1,14 +1,28 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Fonts/OMEGLE.otf" type="DynamicFontData" id=1]
+
+[sub_resource type="DynamicFont" id=2]
+size = 40
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="Theme" id=3]
+default_font = SubResource( 2 )
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Control
 
 
 ### Automatic References Start ###
-onready var _join_host_ui: HBoxContainer = $\"JoinHost UI\"
-onready var _line_edit: LineEdit = $\"JoinHost UI/LineEdit\"
+onready var _host: Button = $\"JoinHost UI/Host\"
+onready var _id_line: LineEdit = $\"JoinHost UI/IDLine\"
+onready var _join: Button = $\"JoinHost UI/Join\"
+onready var _join_host_ui := $\"JoinHost UI\"
 onready var _lobby_name: Label = $\"Lobby UI/LobbyName\"
 onready var _lobby_ui: Control = $\"Lobby UI\"
+onready var _name_line: LineEdit = $\"JoinHost UI/NameLine\"
 ### Automatic References Stop ###
 
 var _result := {}
@@ -21,7 +35,7 @@ func _on_request_completed(result, response_code, headers, body):
 	_result = json.result
 
 func _on_Host_pressed() -> void:
-	var p_name = _line_edit.text
+	var p_name = _name_line.text
 	
 	if p_name != \"\":
 		var res = ConnectionHandler.make_lobby(p_name)
@@ -40,31 +54,75 @@ func _on_Leave_pressed() -> void:
 	if res:
 		_lobby_ui.visible = false
 		_join_host_ui.visible = true
+
+
+func _on_Join_pressed() -> void:
+	var p_name = _name_line.text
+	var l_name = _id_line.text
+	
+	if p_name != \"\" and l_name != \"\":
+		var res = ConnectionHandler.join_lobby(p_name, l_name)
+		yield(ConnectionHandler, \"lobby_joined\")
+		
+		if res:
+			_lobby_name.text = l_name
+			_lobby_ui.visible = true
+			_join_host_ui.visible = false
 "
 
 [node name="JoinTest" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = SubResource( 3 )
 script = SubResource( 1 )
 
-[node name="JoinHost UI" type="HBoxContainer" parent="."]
+[node name="JoinHost UI" type="GridContainer" parent="."]
 anchor_right = 1.0
 margin_left = 138.0
 margin_top = 14.0
 margin_right = -138.0
 margin_bottom = 82.0
-custom_constants/separation = 30
+columns = 2
 
-[node name="LineEdit" type="LineEdit" parent="JoinHost UI"]
-margin_right = 582.0
-margin_bottom = 68.0
+[node name="Label" type="Label" parent="JoinHost UI"]
+margin_top = 5.0
+margin_right = 372.0
+margin_bottom = 44.0
+text = "Player name"
+
+[node name="NameLine" type="LineEdit" parent="JoinHost UI"]
+margin_left = 376.0
+margin_right = 748.0
+margin_bottom = 49.0
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="JoinHost UI"]
+margin_top = 58.0
+margin_right = 372.0
+margin_bottom = 97.0
+text = "Lobby ID"
+
+[node name="IDLine" type="LineEdit" parent="JoinHost UI"]
+margin_left = 376.0
+margin_top = 53.0
+margin_right = 748.0
+margin_bottom = 102.0
 size_flags_horizontal = 3
 
 [node name="Host" type="Button" parent="JoinHost UI"]
-margin_left = 612.0
+margin_top = 106.0
+margin_right = 372.0
+margin_bottom = 151.0
+size_flags_horizontal = 3
+text = "Create"
+
+[node name="Join" type="Button" parent="JoinHost UI"]
+margin_left = 376.0
+margin_top = 106.0
 margin_right = 748.0
-margin_bottom = 68.0
-text = "Host"
+margin_bottom = 151.0
+size_flags_horizontal = 3
+text = "Join"
 
 [node name="Lobby UI" type="Control" parent="."]
 anchor_right = 1.0
@@ -80,6 +138,8 @@ margin_top = -29.0
 margin_right = 88.0
 margin_bottom = 29.0
 text = "--------"
+align = 1
+valign = 1
 
 [node name="Leave" type="Button" parent="Lobby UI"]
 anchor_left = 0.5
@@ -93,4 +153,5 @@ margin_bottom = -21.0
 text = "Leave"
 
 [connection signal="pressed" from="JoinHost UI/Host" to="." method="_on_Host_pressed"]
+[connection signal="pressed" from="JoinHost UI/Join" to="." method="_on_Join_pressed"]
 [connection signal="pressed" from="Lobby UI/Leave" to="." method="_on_Leave_pressed"]

@@ -21,7 +21,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Cactus"
-run/main_scene="res://Main.tscn"
+run/main_scene="res://Tests/JoinTest.tscn"
 config/icon="res://icon.png"
 
 [autoload]
