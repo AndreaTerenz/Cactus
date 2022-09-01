@@ -12,7 +12,7 @@ func request(url: String = "/",\
 	url = url.trim_prefix("/")
 	.request(URL + "/" + url, custom_headers, ssl_validate_domain, method, request_data)
 
-func get(endpoint : String = "/",\
+func send_get(endpoint : String = "/",\
 	custom_headers: PoolStringArray = PoolStringArray(),\
 	ssl_validate_domain: bool = true):
 		

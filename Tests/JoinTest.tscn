@@ -1,0 +1,78 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+
+### Automatic References Start ###
+onready var _h_box_container: HBoxContainer = $HBoxContainer
+onready var _line_edit: LineEdit = $HBoxContainer/LineEdit
+onready var _lobby_name: Label = $LobbyName
+### Automatic References Stop ###
+
+var _result := {}
+
+func _ready():
+	MainConnection.connect(\"request_completed\", self, \"_on_request_completed\")
+
+func _on_request_completed(result, response_code, headers, body):
+	var json = JSON.parse(body.get_string_from_utf8())
+	_result = json.result
+
+func _on_Host_pressed() -> void:
+	var p_name = _line_edit.text
+	
+	if p_name != \"\":
+		MainConnection.send_get(\"new-lobby/%s\" % p_name)
+		yield(MainConnection, \"request_completed\")
+		
+		print(_result)
+		if _result[\"success\"]:
+			_h_box_container.visible = false
+			
+			_lobby_name.text = _result[\"lobby_id\"]
+			_lobby_name.visible = true
+"
+
+[node name="JoinTest" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = SubResource( 1 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+margin_left = 138.0
+margin_top = 14.0
+margin_right = -138.0
+margin_bottom = 82.0
+custom_constants/separation = 30
+
+[node name="LineEdit" type="LineEdit" parent="HBoxContainer"]
+margin_right = 582.0
+margin_bottom = 68.0
+size_flags_horizontal = 3
+
+[node name="Host" type="Button" parent="HBoxContainer"]
+margin_left = 612.0
+margin_right = 748.0
+margin_bottom = 68.0
+text = "Host"
+
+[node name="LobbyName" type="Label" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -88.0
+margin_top = -29.0
+margin_right = 88.0
+margin_bottom = 29.0
+text = "--------"
+
+[node name="In-Lobby UI" type="Control" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[connection signal="pressed" from="HBoxContainer/Host" to="." method="_on_Host_pressed"]
