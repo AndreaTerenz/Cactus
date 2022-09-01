@@ -26,7 +26,7 @@ config/icon="res://icon.png"
 
 [autoload]
 
-MainConnection="*res://Scripts/MainConnection.gd"
+ConnectionHandler="*res://Scripts/ConnectionHandler.gd"
 
 [editor_plugins]
 

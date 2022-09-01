@@ -6,16 +6,16 @@ script/source = "extends Control
 var _result := {}
 
 func _ready():
-	MainConnection.connect(\"request_completed\", self, \"_on_request_completed\")
+	ConnectionHandler.connect(\"request_completed\", self, \"_on_request_completed\")
 	
-	MainConnection.request(\"/deck\")
-	yield(MainConnection, \"request_completed\")
+	ConnectionHandler.request(\"/deck\")
+	yield(ConnectionHandler, \"request_completed\")
 	
 	print(_result)
 
 func _on_Button_pressed():
-	MainConnection.request()
-	yield(MainConnection, \"request_completed\")
+	ConnectionHandler.request()
+	yield(ConnectionHandler, \"request_completed\")
 	
 	$Label.text = str(_result[\"Hello\"])
 
